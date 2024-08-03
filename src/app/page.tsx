@@ -94,11 +94,11 @@ export default function Home() {
     },
   ];
   return (
-    <div className='flex pb-6 flex-col gap-6 items-center'>
+    <div className='flex pb-6 relative flex-col gap-6 items-center'>
       <div className="h-[90px] w-full bg-gradient-to-r from-indigo-500  to-purple-400 text-white md:text-[40px] text-[26px] font-bold font-sans flex items-center justify-center">
         <h1>Pinterest-like Image Gallery</h1>
       </div>
-      <PinterestLayout images={images} />
+        <PinterestLayout images={images} />
     </div>
   );
 }

@@ -15,7 +15,16 @@ interface MetaImageProps extends ImageProps {
 
 const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
     const [metaImages, setMetaImages] = useState<MetaImageProps[]>([]);
-    const [columnCount, setColumnCount] = useState(1);
+    const getColumnWidth = (): number => {
+        const padding = 16; // Define padding (8px on each side)
+        if (window.innerWidth < 640) return 160 + padding; // less than sm
+        if (window.innerWidth < 768) return 200 + padding; // sm
+        if (window.innerWidth < 1024) return 250 + padding; // md
+        if (window.innerWidth < 1280) return 300 + padding; // lg
+        return 350 + padding; // xl
+    };
+
+    const [columnWidth, setColumnWidth] = useState(getColumnWidth());
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -36,17 +45,15 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
     }, [images]);
 
     useEffect(() => {
-        const updateColumnCount = () => {
-            const containerWidth = window.innerWidth;
-            const columnWidth = getColumnWidth();
-            setColumnCount(Math.max(Math.floor(containerWidth / columnWidth), 1)); // Ensure at least one column
+        const updateColumnWidth = () => {
+            setColumnWidth(getColumnWidth());
         };
 
-        window.addEventListener('resize', updateColumnCount);
-        updateColumnCount(); // Initialize on mount
+        window.addEventListener('resize', updateColumnWidth);
+        updateColumnWidth(); // Initialize on mount
 
         return () => {
-            window.removeEventListener('resize', updateColumnCount);
+            window.removeEventListener('resize', updateColumnWidth);
         };
     }, []);
 
@@ -60,21 +67,20 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
         });
     };
 
-    const getColumnWidth = (): number => {
-        if (window.innerWidth < 640) return 160; // less than sm
-        if (window.innerWidth < 768) return 200; // sm
-        if (window.innerWidth < 1024) return 250; // md
-        if (window.innerWidth < 1280) return 300; // lg
-        return 350; // xl
+
+    const calculateColumnCount = (): number => {
+        const containerWidth = window.innerWidth;
+        return Math.max(Math.floor(containerWidth / columnWidth), 1); // Ensure at least one column
     };
 
     const renderImages = () => {
+        const columnCount = calculateColumnCount();
         const columns: MetaImageProps[][] = Array.from({ length: columnCount }, () => []);
 
         metaImages.forEach((image) => {
             const shortestColumnIndex = columns.reduce((prev, curr, idx) => {
-                const prevHeight = columns[prev].reduce((sum, img) => sum + (img.height / img.width) * getColumnWidth(), 0);
-                const currHeight = columns[idx].reduce((sum, img) => sum + (img.height / img.width) * getColumnWidth(), 0);
+                const prevHeight = columns[prev].reduce((sum, img) => sum + (img.height / img.width) * columnWidth, 0);
+                const currHeight = columns[idx].reduce((sum, img) => sum + (img.height / img.width) * columnWidth, 0);
                 return prevHeight < currHeight ? prev : idx;
             }, 0);
 
@@ -82,14 +88,14 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
         });
 
         return columns.map((column, columnIndex) => (
-            <div key={columnIndex} className='flex flex-col gap-4'>
+            <div key={columnIndex} className='flex flex-col gap-4 '> {/* Add padding here */}
                 {column.map((image, index) => {
-                    const columnWidth = getColumnWidth();
-                    const height = (image.height / image.width) * columnWidth;
+                    const adjustedWidth = columnWidth - 16; // Adjust width by removing the padding
+                    const height = (image.height / image.width) * adjustedWidth;
                     return (
                         <ImageCard
                             height={height}
-                            columnWidth={columnWidth}
+                            columnWidth={adjustedWidth}
                             image={image}
                             key={index}
                         />
