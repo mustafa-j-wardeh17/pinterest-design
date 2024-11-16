@@ -92,6 +92,52 @@ export default function Home() {
       src: '/22.jpg',
       alt: 'Image 22',
     },
+
+    {
+      src: '/3.jpg',
+      alt: 'Image 23',
+    },
+    {
+      src: '/4.jpg',
+      alt: 'Image 24',
+    },
+    {
+      src: '/5.jpg',
+      alt: 'Image 25',
+    },
+    {
+      src: '/6.jpg',
+      alt: 'Image 26',
+    },
+    {
+      src: '/7.jpg',
+      alt: 'Image 27',
+    },
+    {
+      src: '/8.jpg',
+      alt: 'Image 28',
+    },
+    {
+      src: '/9.jpg',
+      alt: 'Image 29',
+    },
+    {
+      src: '/10.jpg',
+      alt: 'Image 30',
+    },
+    {
+      src: '/11.jpg',
+      alt: 'Image 31',
+    },
+    {
+      src: '/12.jpg',
+      alt: 'Image 32',
+    },
+
+    {
+      src: '/13.jpg',
+      alt: 'Image 33',
+    },
   ];
   return (
     <div className='flex pb-6 relative flex-col gap-6 items-center'>

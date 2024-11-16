@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import ImageCard from './ImageCard';
 
@@ -17,6 +16,7 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
     const [metaImages, setMetaImages] = useState<MetaImageProps[]>([]);
     const getColumnWidth = (): number => {
         const padding = 16; // Define padding (8px on each side)
+        if (typeof window === 'undefined') return 350 + padding; // Default width for SSR
         if (window.innerWidth < 460) return 120 + padding; // less than sm
         if (window.innerWidth < 640) return 160 + padding; // less than sm
         if (window.innerWidth < 768) return 200 + padding; // sm
