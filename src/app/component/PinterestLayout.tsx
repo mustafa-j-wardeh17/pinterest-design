@@ -50,11 +50,15 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
             setColumnWidth(getColumnWidth());
         };
 
-        window.addEventListener('resize', updateColumnWidth);
-        updateColumnWidth(); // Initialize on mount
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', updateColumnWidth);
+            updateColumnWidth(); // Initialize on mount
+        }
 
         return () => {
-            window.removeEventListener('resize', updateColumnWidth);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('resize', updateColumnWidth);
+            }
         };
     }, []);
 
@@ -70,6 +74,8 @@ const PinterestLayout = ({ images }: { images: ImageProps[] }) => {
 
 
     const calculateColumnCount = (): number => {
+        if (typeof window === 'undefined') return 1; // Default to 1 column for SSR
+
         const containerWidth = window.innerWidth;
         return Math.max(Math.floor(containerWidth / columnWidth), 1); // Ensure at least one column
     };
